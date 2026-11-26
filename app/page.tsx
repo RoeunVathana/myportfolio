@@ -1,28 +1,51 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
-const projects = [
+type PublicProject = { id: string; title: string; tag: string; description: string; accent: string };
+type PublicProfile = { displayName: string; role: string; intro: string; about: string; location: string; availability: string; email: string };
+type PublicSiteInfo = { stack: string; currently: string; location: string; contactEmail: string; github: string; linkedin: string };
+
+const fallbackProfile: PublicProfile = {
+  displayName: "Noah",
+  role: "FULL-STACK DEVELOPER / 2025",
+  intro: "I'm Noah — I design and engineer expressive digital products for people with something worth saying.",
+  about: "I like the part where a fuzzy idea becomes something you can touch. My work lives at the intersection of thoughtful product design, playful technology, and the tiny details that make a screen feel human.",
+  location: "Bangkok / GMT+7",
+  availability: "Available for select projects",
+  email: "hello@noah.dev",
+};
+
+const fallbackSiteInfo: PublicSiteInfo = {
+  stack: "Next.js + NestJS",
+  currently: "Building for the web",
+  location: "Bangkok / GMT+7",
+  contactEmail: "hello@noah.dev",
+  github: "https://github.com",
+  linkedin: "https://linkedin.com",
+};
+
+const fallbackProjects: PublicProject[] = [
   {
-    number: "01",
+    id: "orbit-finance",
     title: "Orbit Finance",
     tag: "Product system",
     description: "A calm, high-signal finance workspace for teams that want clarity without the spreadsheet sprawl.",
-    className: "project-orbit",
+    accent: "project-orbit",
   },
   {
-    number: "02",
+    id: "mori-objects",
     title: "Mori Objects",
     tag: "E-commerce experience",
     description: "A tactile storefront with a tiny carbon footprint, built around thoughtful objects and quiet motion.",
-    className: "project-mori",
+    accent: "project-mori",
   },
   {
-    number: "03",
+    id: "studio-42",
     title: "Studio / 42",
     tag: "Creative tooling",
     description: "A shared visual playground where a distributed creative team can think, remix, and ship together.",
-    className: "project-studio",
+    accent: "project-studio",
   },
 ];
 
@@ -127,6 +150,20 @@ function ProjectVisual({ className }: { className: string }) {
 
 export default function Home() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [profile, setProfile] = useState(fallbackProfile);
+  const [siteInfo, setSiteInfo] = useState(fallbackSiteInfo);
+  const [projects, setProjects] = useState(fallbackProjects);
+
+  useEffect(() => {
+    fetch(`${portfolioApiUrl}/api/content`)
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("Content unavailable")))
+      .then((data: { profile: PublicProfile; siteInfo: PublicSiteInfo; projects: Array<PublicProject & { featured?: boolean }> }) => {
+        setProfile(data.profile);
+        setSiteInfo(data.siteInfo);
+        setProjects(data.projects.filter((project) => project.featured !== false));
+      })
+      .catch(() => undefined);
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -157,14 +194,14 @@ export default function Home() {
           <a href="#about">About</a>
           <a href="#contact">Contact</a>
         </div>
-        <a className="nav-status" href="#contact"><span />Available for select projects</a>
+        <a className="nav-status" href="#contact"><span />{profile.availability}</a>
       </nav>
 
       <section className="hero shell">
         <div className="hero-copy">
-          <p className="eyebrow"><span className="eyebrow-line" /> FULL-STACK DEVELOPER / 2025</p>
+          <p className="eyebrow"><span className="eyebrow-line" /> {profile.role}</p>
           <h1>Digital things<br /><span>with a pulse.</span></h1>
-          <p className="hero-intro">I&apos;m Noah — I design and engineer expressive digital products for people with something worth saying.</p>
+          <p className="hero-intro">{profile.intro}</p>
           <div className="hero-actions">
             <a className="button button-primary" href="#work">Explore the work <ArrowIcon /></a>
             <a className="text-link" href="#about">More about me <span>↘</span></a>
@@ -184,10 +221,10 @@ export default function Home() {
           <p className="section-note">A mix of product work, experiments, and the spaces between them. <span>↘</span></p>
         </div>
         <div className="projects-grid">
-          {projects.map((project) => (
-            <article className="project-card" key={project.number}>
-              <ProjectVisual className={project.className} />
-              <div className="project-meta"><span>{project.number} / {project.tag}</span><span className="project-arrow">↗</span></div>
+          {projects.map((project, index) => (
+            <article className="project-card" key={project.id}>
+              <ProjectVisual className={project.accent} />
+              <div className="project-meta"><span>{String(index + 1).padStart(2, "0")} / {project.tag}</span><span className="project-arrow">↗</span></div>
               <h3>{project.title}</h3>
               <p>{project.description}</p>
             </article>
@@ -197,11 +234,11 @@ export default function Home() {
 
       <section className="about-section shell section-pad" id="about">
         <div className="about-stamp"><span>NOAH</span><small>EST. 2020</small></div>
-        <div className="about-copy"><p className="eyebrow"><span className="eyebrow-line" /> A LITTLE ABOUT ME</p><h2>Code is my craft.<br /><em>Curiosity is my compass.</em></h2><p className="about-lead">I like the part where a fuzzy idea becomes something you can touch. My work lives at the intersection of thoughtful product design, playful technology, and the tiny details that make a screen feel human.</p><div className="about-details"><div><span>Based in</span><strong>Bangkok / GMT+7</strong></div><div><span>Currently</span><strong>Building for the web</strong></div><div><span>Favorite stack</span><strong>Next.js + NestJS</strong></div></div><a className="button button-outline" href="#contact">Let&apos;s make something <ArrowIcon /></a></div>
+        <div className="about-copy"><p className="eyebrow"><span className="eyebrow-line" /> A LITTLE ABOUT ME</p><h2>Code is my craft.<br /><em>Curiosity is my compass.</em></h2><p className="about-lead">{profile.about}</p><div className="about-details"><div><span>Based in</span><strong>{siteInfo.location}</strong></div><div><span>Currently</span><strong>{siteInfo.currently}</strong></div><div><span>Favorite stack</span><strong>{siteInfo.stack}</strong></div></div><a className="button button-outline" href="#contact">Let&apos;s make something <ArrowIcon /></a></div>
       </section>
 
       <section className="contact-section shell section-pad" id="contact">
-        <div className="contact-copy"><p className="eyebrow"><span className="eyebrow-line" /> HAVE A GOOD ONE?</p><h2>Let&apos;s make<br /><em>some noise.</em></h2><p>Have a project in mind, a question, or just want to say hello? I&apos;d love to hear what you&apos;re working on.</p><div className="contact-links"><a href="mailto:hello@noah.dev">hello@noah.dev <span>↗</span></a><a href="https://github.com" target="_blank" rel="noreferrer">GitHub <span>↗</span></a><a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn <span>↗</span></a></div></div>
+        <div className="contact-copy"><p className="eyebrow"><span className="eyebrow-line" /> HAVE A GOOD ONE?</p><h2>Let&apos;s make<br /><em>some noise.</em></h2><p>Have a project in mind, a question, or just want to say hello? I&apos;d love to hear what you&apos;re working on.</p><div className="contact-links"><a href={`mailto:${siteInfo.contactEmail}`}>{siteInfo.contactEmail} <span>↗</span></a><a href={siteInfo.github} target="_blank" rel="noreferrer">GitHub <span>↗</span></a><a href={siteInfo.linkedin} target="_blank" rel="noreferrer">LinkedIn <span>↗</span></a></div></div>
         <form className="contact-form" onSubmit={handleSubmit}><label><span>Your name</span><input name="name" placeholder="A real human, hopefully" required /></label><label><span>Email address</span><input name="email" type="email" placeholder="you@somewhere.com" required /></label><label><span>What are we making?</span><textarea name="message" placeholder="Tell me the good stuff..." rows={4} required /></label><button className="button button-primary" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending..." : "Send the signal"} <ArrowIcon /></button>{status === "sent" && <p className="form-message success">Signal received. I&apos;ll be in touch soon.</p>}{status === "error" && <p className="form-message error">The API is offline. Email me directly at hello@noah.dev.</p>}</form>
       </section>
 
