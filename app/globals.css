@@ -181,3 +181,24 @@ h1 span, h2 em { color: var(--lilac); font-style: normal; }
 @media (max-width: 560px) {
   .cms-image-upload { align-items: flex-start; flex-direction: column; }
 }
+
+.github-section { border-top: 1px solid var(--line); }
+.github-grid { display: grid; gap: 14px; grid-template-columns: repeat(3, 1fr); }
+.github-repo-card { background: rgba(255,255,255,.18); border: 1px solid var(--line); display: flex; flex-direction: column; min-height: 190px; padding: 21px; transition: background .3s ease, box-shadow .3s ease, transform .3s ease; }
+.github-repo-card:hover { background: var(--acid); box-shadow: 8px 9px 0 rgba(17,17,18,.14); transform: translate(-3px, -5px); }
+.github-repo-top, .github-repo-meta { align-items: center; display: flex; font-size: 9px; font-weight: 900; justify-content: space-between; letter-spacing: .1em; text-transform: uppercase; }
+.github-repo-top { color: var(--muted); }
+.github-mark { align-items: center; background: var(--ink); border-radius: 50%; color: var(--paper); display: inline-flex; font-size: 8px; height: 25px; justify-content: center; width: 25px; }
+.github-repo-card h3 { font-size: 23px; letter-spacing: -.07em; margin: 28px 0 9px; overflow-wrap: anywhere; }
+.github-repo-card p { color: var(--muted); font-size: 13px; line-height: 1.45; margin: 0; }
+.github-repo-meta { border-top: 1px solid var(--line); color: var(--muted); margin-top: auto; padding-top: 15px; }
+.github-repo-card:hover .github-repo-top, .github-repo-card:hover p, .github-repo-card:hover .github-repo-meta { color: var(--ink); }
+.github-repo-card:hover .github-mark { background: var(--hot); }
+
+@media (max-width: 900px) {
+  .github-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .github-grid { grid-template-columns: 1fr; }
+}

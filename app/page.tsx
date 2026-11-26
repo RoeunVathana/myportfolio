@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 type PublicProject = { id: string; title: string; tag: string; description: string; accent: string };
 type PublicProfile = { displayName: string; role: string; intro: string; about: string; location: string; availability: string; email: string; avatarUrl: string };
 type PublicSiteInfo = { stack: string; currently: string; location: string; contactEmail: string; github: string; linkedin: string };
+type GitHubRepo = { id: number; name: string; html_url: string; description: string | null; language: string | null; stargazers_count: number; archived?: boolean };
 
 const fallbackProfile: PublicProfile = {
   displayName: "Noah",
@@ -22,7 +23,7 @@ const fallbackSiteInfo: PublicSiteInfo = {
   currently: "Building for the web",
   location: "Bangkok / GMT+7",
   contactEmail: "hello@noah.dev",
-  github: "https://github.com",
+  github: "https://github.com/RoeunVathana",
   linkedin: "https://linkedin.com",
 };
 
@@ -49,6 +50,11 @@ const fallbackProjects: PublicProject[] = [
     accent: "project-studio",
   },
 ];
+
+const githubUsername = "RoeunVathana";
+const fallbackGitHubRepos: GitHubRepo[] = [
+  "myportfolio", "nestjs-ecommerce-2026", "ToolAi", "miniapi", "Project-Trading", "soktheaj", "MageShop", "schoolManagement", "Soktheajr", "ReactJsICTAt2_4", "projectComputeruseJavaSpringBoot", "learnNestJs", "computer_ecommerce", "Api_Trading_Deploy", "NodeApiSecond", "nodeApiFirst", "JavaSpringBootKruTy", "ApiForDart", "NewHotelManagement", "learnNextjs", "Hotel_management", "DeployApiCafeManagement", "CafeManagementPayment", "projectBakong", "JavaSpringBootOnlineFinish", "JavaSpringBootSetec",
+].map((name, index) => ({ id: index + 1, name, html_url: `https://github.com/${githubUsername}/${name}`, description: null, language: null, stargazers_count: 0 }));
 
 const portfolioApiUrl = process.env.NEXT_PUBLIC_API_URL ?? (process.env.NODE_ENV === "production"
   ? "https://noah-portfolio-api.vivaciousdandelion4.chatgpt.site"
@@ -187,6 +193,7 @@ export default function Home() {
   const [profile, setProfile] = useState(fallbackProfile);
   const [siteInfo, setSiteInfo] = useState(fallbackSiteInfo);
   const [projects, setProjects] = useState(fallbackProjects);
+  const [githubRepos, setGitHubRepos] = useState(fallbackGitHubRepos);
 
   useEffect(() => {
     fetch(`${portfolioApiUrl}/api/content`)
@@ -196,6 +203,13 @@ export default function Home() {
         setSiteInfo(data.siteInfo);
         setProjects(data.projects.filter((project) => project.featured !== false));
       })
+      .catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    fetch(`https://api.github.com/users/${githubUsername}/repos?per_page=100&sort=updated`, { headers: { Accept: "application/vnd.github+json" } })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("GitHub unavailable")))
+      .then((data: GitHubRepo[]) => setGitHubRepos(data.filter((repo) => !repo.archived)))
       .catch(() => undefined);
   }, []);
 
@@ -225,6 +239,7 @@ export default function Home() {
         <BrandMark />
         <div className="nav-links">
           <a href="#work">Work</a>
+          <a href="#github">GitHub</a>
           <a href="#about">About</a>
           <a href="#contact">Contact</a>
         </div>
@@ -264,6 +279,11 @@ export default function Home() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="github-section shell section-pad" id="github">
+        <div className="section-heading"><div><p className="eyebrow"><span className="eyebrow-line" /> OPEN SOURCE / {githubRepos.length} REPOSITORIES</p><h2>Everything<br /><em>I&apos;ve shipped.</em></h2></div><a className="text-link" href={`https://github.com/${githubUsername}`} target="_blank" rel="noreferrer">View GitHub profile</a></div>
+        <div className="github-grid">{githubRepos.map((repo) => <a className="github-repo-card" href={repo.html_url} key={repo.id} target="_blank" rel="noreferrer"><div className="github-repo-top"><span className="github-mark">GH</span><span>PUBLIC REPOSITORY</span></div><h3>{repo.name}</h3><p>{repo.description || "A project from Noah's GitHub workspace."}</p><div className="github-repo-meta"><span>{repo.language || "CODE"}</span><span>{repo.stargazers_count > 0 ? `★ ${repo.stargazers_count}` : "OPEN"}</span></div></a>)}</div>
       </section>
 
       <section className="about-section shell section-pad" id="about">

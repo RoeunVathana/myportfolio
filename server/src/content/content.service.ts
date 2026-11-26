@@ -24,7 +24,7 @@ const defaultSiteInfo = {
   currently: "Building for the web",
   location: "Bangkok / GMT+7",
   contactEmail: "hello@noah.dev",
-  github: "https://github.com",
+  github: "https://github.com/RoeunVathana",
   linkedin: "https://linkedin.com",
 };
 
