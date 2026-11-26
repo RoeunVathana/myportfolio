@@ -194,6 +194,9 @@ h1 span, h2 em { color: var(--lilac); font-style: normal; }
 .github-repo-meta { border-top: 1px solid var(--line); color: var(--muted); margin-top: auto; padding-top: 15px; }
 .github-repo-card:hover .github-repo-top, .github-repo-card:hover p, .github-repo-card:hover .github-repo-meta { color: var(--ink); }
 .github-repo-card:hover .github-mark { background: var(--hot); }
+.project-site-link { align-items: center; color: var(--ink); display: inline-flex; font-size: 10px; font-weight: 900; gap: 9px; letter-spacing: .08em; margin-top: 18px; text-transform: uppercase; }
+.project-site-link svg { color: var(--hot); height: 15px; width: 15px; }
+.project-site-link:hover { color: var(--hot); }
 
 @media (max-width: 900px) {
   .github-grid { grid-template-columns: repeat(2, 1fr); }

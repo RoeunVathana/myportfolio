@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 
-type PublicProject = { id: string; title: string; tag: string; description: string; accent: string };
+type PublicProject = { id: string; title: string; tag: string; description: string; accent: string; link: string };
 type PublicProfile = { displayName: string; role: string; intro: string; about: string; location: string; availability: string; email: string; avatarUrl: string };
 type PublicSiteInfo = { stack: string; currently: string; location: string; contactEmail: string; github: string; linkedin: string };
 type GitHubRepo = { id: number; name: string; html_url: string; description: string | null; language: string | null; stargazers_count: number; archived?: boolean };
@@ -34,6 +34,7 @@ const fallbackProjects: PublicProject[] = [
     tag: "Product system",
     description: "A calm, high-signal finance workspace for teams that want clarity without the spreadsheet sprawl.",
     accent: "project-orbit",
+    link: "#",
   },
   {
     id: "mori-objects",
@@ -41,6 +42,7 @@ const fallbackProjects: PublicProject[] = [
     tag: "E-commerce experience",
     description: "A tactile storefront with a tiny carbon footprint, built around thoughtful objects and quiet motion.",
     accent: "project-mori",
+    link: "#",
   },
   {
     id: "studio-42",
@@ -48,6 +50,7 @@ const fallbackProjects: PublicProject[] = [
     tag: "Creative tooling",
     description: "A shared visual playground where a distributed creative team can think, remix, and ship together.",
     accent: "project-studio",
+    link: "#",
   },
 ];
 
@@ -275,7 +278,7 @@ export default function Home() {
               <ProjectVisual className={project.accent} />
               <div className="project-meta"><span>{String(index + 1).padStart(2, "0")} / {project.tag}</span><span className="project-arrow">↗</span></div>
               <h3>{project.title}</h3>
-              <p>{project.description}</p>
+              <p>{project.description}</p>{project.link && project.link !== "#" && <a className="project-site-link" href={project.link} target="_blank" rel="noreferrer">Open deployed site <ArrowIcon /></a>}
             </article>
           ))}
         </div>
