@@ -276,7 +276,7 @@ export default function Home() {
           {projects.map((project, index) => (
             <article className="project-card" key={project.id}>
               <ProjectVisual className={project.accent} />
-              <div className="project-meta"><span>{String(index + 1).padStart(2, "0")} / {project.tag}</span><span className="project-arrow">↗</span></div>
+              <div className="project-meta"><span>{String(index + 1).padStart(2, "0")} / {project.tag}</span>{project.link && project.link !== "#" ? <a className="project-visit" href={project.link} target="_blank" rel="noreferrer">LIVE SITE ↗</a> : <span className="project-arrow">↗</span>}</div>
               <h3>{project.title}</h3>
               <p>{project.description}</p>{project.link && project.link !== "#" && <a className="project-site-link" href={project.link} target="_blank" rel="noreferrer">Open deployed site <ArrowIcon /></a>}
             </article>
