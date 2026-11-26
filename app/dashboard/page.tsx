@@ -10,6 +10,7 @@ type Profile = {
   location: string;
   availability: string;
   email: string;
+  avatarUrl: string;
 };
 
 type SiteInfo = {
@@ -58,6 +59,44 @@ function Field({ label, value, onChange, multiline = false, type = "text" }: { l
       <span>{label}</span>
       {multiline ? <textarea value={value} onChange={(event) => onChange(event.target.value)} rows={5} /> : <input type={type} value={value} onChange={(event) => onChange(event.target.value)} />}
     </label>
+  );
+}
+
+function ProfileImageField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const [error, setError] = useState("");
+
+  function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setError("Choose an image file.");
+      return;
+    }
+    if (file.size > 1024 * 1024) {
+      setError("Please choose an image smaller than 1 MB.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setError("");
+        onChange(reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  return (
+    <div className="cms-image-upload cms-field-wide">
+      <div className="cms-image-preview">{value ? <img src={value} alt="Profile preview" /> : <span>NO<br />PHOTO</span>}</div>
+      <div className="cms-image-controls">
+        <span className="cms-field-label">Profile photo</span>
+        <label className="cms-file-button"><input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleFile} />Choose from folder</label>
+        {value && <button className="cms-remove-image" type="button" onClick={() => onChange("")}>Remove photo</button>}
+        <p>JPG, PNG, or WebP · 1 MB max · saved with your profile.</p>
+        {error && <small className="cms-upload-error">{error}</small>}
+      </div>
+    </div>
   );
 }
 
@@ -182,7 +221,7 @@ export default function DashboardPage() {
 
             {tab === "overview" && <div className="cms-panel overview-panel"><div className="panel-head"><div><p className="dashboard-kicker"><span className="green-dot" /> OVERVIEW</p><h2>Your site at a glance.</h2></div><button className="dashboard-refresh" type="button" onClick={() => { setState("locked"); setContent(null); setKey(""); }}>Lock editor</button></div><div className="cms-overview-grid"><article><span>Profile</span><strong>{content.profile.displayName}</strong><small>{content.profile.role}</small></article><article><span>Published work</span><strong>{content.projects.length.toString().padStart(2, "0")}</strong><small>Projects in your portfolio</small></article><article><span>Stack</span><strong className="overview-stack">{content.siteInfo.stack}</strong><small>{content.siteInfo.currently}</small></article></div><div className="cms-quick-actions"><button type="button" onClick={() => setTab("profile")}>Edit profile <span>↗</span></button><button type="button" onClick={() => { setTab("projects"); setDraftProject(emptyProject); }}>Add a project <span>↗</span></button><button type="button" onClick={() => setTab("siteInfo")}>Update site info <span>↗</span></button></div></div>}
 
-            {tab === "profile" && <div className="cms-panel"><div className="panel-head"><div><p className="dashboard-kicker"><span /> PROFILE</p><h2>Tell people who you are.</h2></div><span className="panel-meta">Public / profile</span></div><div className="cms-form-grid"><Field label="Display name" value={content.profile.displayName} onChange={(value) => updateProfile("displayName", value)} /><Field label="Role / eyebrow" value={content.profile.role} onChange={(value) => updateProfile("role", value)} /><Field label="Email" type="email" value={content.profile.email} onChange={(value) => updateProfile("email", value)} /><Field label="Location" value={content.profile.location} onChange={(value) => updateProfile("location", value)} /><Field label="Availability" value={content.profile.availability} onChange={(value) => updateProfile("availability", value)} /><div className="cms-field-wide"><Field label="Hero introduction" value={content.profile.intro} multiline onChange={(value) => updateProfile("intro", value)} /></div><div className="cms-field-wide"><Field label="About paragraph" value={content.profile.about} multiline onChange={(value) => updateProfile("about", value)} /></div></div><div className="cms-actions"><button className="dashboard-button" type="button" disabled={saving} onClick={() => save("/api/admin/profile", "PUT", content.profile, "Profile saved.")}>{saving ? "Saving..." : "Save profile ↗"}</button></div></div>}
+            {tab === "profile" && <div className="cms-panel"><div className="panel-head"><div><p className="dashboard-kicker"><span /> PROFILE</p><h2>Tell people who you are.</h2></div><span className="panel-meta">Public / profile</span></div><div className="cms-form-grid"><Field label="Display name" value={content.profile.displayName} onChange={(value) => updateProfile("displayName", value)} /><Field label="Role / eyebrow" value={content.profile.role} onChange={(value) => updateProfile("role", value)} /><Field label="Email" type="email" value={content.profile.email} onChange={(value) => updateProfile("email", value)} /><Field label="Location" value={content.profile.location} onChange={(value) => updateProfile("location", value)} /><Field label="Availability" value={content.profile.availability} onChange={(value) => updateProfile("availability", value)} /><div className="cms-field-wide"><Field label="Hero introduction" value={content.profile.intro} multiline onChange={(value) => updateProfile("intro", value)} /></div><div className="cms-field-wide"><Field label="About paragraph" value={content.profile.about} multiline onChange={(value) => updateProfile("about", value)} /></div></div><ProfileImageField value={content.profile.avatarUrl} onChange={(value) => updateProfile("avatarUrl", value)} /><div className="cms-actions"><button className="dashboard-button" type="button" disabled={saving} onClick={() => save("/api/admin/profile", "PUT", content.profile, "Profile saved.")}>{saving ? "Saving..." : "Save profile ↗"}</button></div></div>}
 
             {tab === "siteInfo" && <div className="cms-panel"><div className="panel-head"><div><p className="dashboard-kicker"><span /> SITE INFO</p><h2>Keep the details fresh.</h2></div><span className="panel-meta">Public / details</span></div><div className="cms-form-grid"><Field label="Favorite stack" value={content.siteInfo.stack} onChange={(value) => updateSiteInfo("stack", value)} /><Field label="Currently" value={content.siteInfo.currently} onChange={(value) => updateSiteInfo("currently", value)} /><Field label="Based in" value={content.siteInfo.location} onChange={(value) => updateSiteInfo("location", value)} /><Field label="Contact email" type="email" value={content.siteInfo.contactEmail} onChange={(value) => updateSiteInfo("contactEmail", value)} /><Field label="GitHub URL" value={content.siteInfo.github} onChange={(value) => updateSiteInfo("github", value)} /><Field label="LinkedIn URL" value={content.siteInfo.linkedin} onChange={(value) => updateSiteInfo("linkedin", value)} /></div><div className="cms-actions"><button className="dashboard-button" type="button" disabled={saving} onClick={() => save("/api/admin/site-info", "PUT", content.siteInfo, "Site info saved.")}>{saving ? "Saving..." : "Save site info ↗"}</button></div></div>}
 

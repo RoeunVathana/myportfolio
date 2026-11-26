@@ -8,6 +8,7 @@ export class ProfileUpdateDto {
   @IsString() @IsNotEmpty() @MaxLength(120) location!: string;
   @IsString() @IsNotEmpty() @MaxLength(120) availability!: string;
   @IsEmail() email!: string;
+  @IsString() @IsOptional() @MaxLength(2000000) avatarUrl = "";
 }
 
 export class SiteInfoUpdateDto {

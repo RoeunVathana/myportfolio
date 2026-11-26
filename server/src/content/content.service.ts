@@ -15,6 +15,7 @@ const defaultProfile = {
   location: "Bangkok / GMT+7",
   availability: "Available for select projects",
   email: "hello@noah.dev",
+  avatarUrl: "",
 };
 
 const defaultSiteInfo = {

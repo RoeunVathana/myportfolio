@@ -25,4 +25,7 @@ export class ProfileEntity {
 
   @Column({ length: 255 })
   email!: string;
+
+  @Column({ type: "text", default: "" })
+  avatarUrl!: string;
 }

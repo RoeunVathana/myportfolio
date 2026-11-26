@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 type PublicProject = { id: string; title: string; tag: string; description: string; accent: string };
-type PublicProfile = { displayName: string; role: string; intro: string; about: string; location: string; availability: string; email: string };
+type PublicProfile = { displayName: string; role: string; intro: string; about: string; location: string; availability: string; email: string; avatarUrl: string };
 type PublicSiteInfo = { stack: string; currently: string; location: string; contactEmail: string; github: string; linkedin: string };
 
 const fallbackProfile: PublicProfile = {
@@ -14,6 +14,7 @@ const fallbackProfile: PublicProfile = {
   location: "Bangkok / GMT+7",
   availability: "Available for select projects",
   email: "hello@noah.dev",
+  avatarUrl: "",
 };
 
 const fallbackSiteInfo: PublicSiteInfo = {
@@ -78,7 +79,7 @@ function BrandMark() {
   );
 }
 
-function HeroScene() {
+function HeroScene({ avatarUrl }: { avatarUrl: string }) {
   const sceneRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -156,6 +157,8 @@ function HeroScene() {
           </div>
         </div>
       </div>
+
+      {avatarUrl && <div className="scene-avatar"><img src={avatarUrl} alt="Noah" /></div>}
 
       <div className="scene-star star-one"><SparkIcon size={42} /></div>
       <div className="scene-star star-two"><SparkIcon size={22} /></div>
@@ -239,7 +242,7 @@ export default function Home() {
           </div>
           <div className="hero-footnote"><SparkIcon size={18} /><span>01 / 04</span><span className="footnote-rule" /><span>Scroll to explore</span></div>
         </div>
-        <HeroScene />
+        <HeroScene avatarUrl={profile.avatarUrl} />
       </section>
 
       <section className="marquee" aria-label="Services">
