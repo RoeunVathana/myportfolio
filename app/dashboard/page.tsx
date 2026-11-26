@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 type Profile = {
   displayName: string;
@@ -35,6 +35,8 @@ type Project = {
 type Content = { profile: Profile; siteInfo: SiteInfo; projects: Project[] };
 type Tab = "overview" | "profile" | "projects" | "siteInfo";
 
+const dashboardSessionKey = "noah-dashboard-key";
+
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? (process.env.NODE_ENV === "production"
   ? "https://noah-portfolio-api.vivaciousdandelion4.chatgpt.site"
   : "http://localhost:4000");
@@ -68,6 +70,7 @@ export default function DashboardPage() {
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [notice, setNotice] = useState("");
+  const didMountRef = useRef(false);
 
   async function loadContent(accessKey = key) {
     const response = await fetch(`${apiUrl}/api/admin/content`, { headers: { "x-dashboard-key": accessKey } });
@@ -76,12 +79,41 @@ export default function DashboardPage() {
     return (await response.json()) as Content;
   }
 
+  useEffect(() => {
+    const savedKey = window.sessionStorage.getItem(dashboardSessionKey);
+    if (!savedKey) return;
+
+    setKey(savedKey);
+    setState("loading");
+    loadContent(savedKey)
+      .then((data) => {
+        setContent(data);
+        setState("ready");
+      })
+      .catch(() => {
+        window.sessionStorage.removeItem(dashboardSessionKey);
+        setKey("");
+        setErrorMessage("Your dashboard session expired. Enter the key again.");
+        setState("locked");
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    if (state === "locked" && !content) window.sessionStorage.removeItem(dashboardSessionKey);
+  }, [content, state]);
+
   async function openEditor(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setState("loading");
     setErrorMessage("");
     try {
-      setContent(await loadContent());
+      const data = await loadContent();
+      window.sessionStorage.setItem(dashboardSessionKey, key);
+      setContent(data);
       setState("ready");
     } catch (error) {
       const remoteLocalApi = typeof window !== "undefined" && window.location.hostname !== "localhost" && apiUrl.includes("localhost");
