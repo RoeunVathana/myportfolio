@@ -197,6 +197,13 @@ h1 span, h2 em { color: var(--lilac); font-style: normal; }
 .project-site-link { align-items: center; color: var(--ink); display: inline-flex; font-size: 10px; font-weight: 900; gap: 9px; letter-spacing: .08em; margin-top: 18px; text-transform: uppercase; }
 .project-site-link svg { color: var(--hot); height: 15px; width: 15px; }
 .project-site-link:hover { color: var(--hot); }
+.project-image-visual { background: var(--paper); }
+.project-image-visual img { display: block; height: 100%; object-fit: cover; transition: transform .65s cubic-bezier(.2,.8,.2,1); width: 100%; }
+.project-image-shade { background: linear-gradient(180deg, transparent 58%, rgba(17,17,18,.28)); inset: 0; pointer-events: none; position: absolute; }
+.project-card:hover .project-image-visual img { transform: scale(1.06); }
+.cms-field-hint { color: #77757f; display: block; font-size: 11px; line-height: 1.45; margin-top: 8px; }
+.cms-project-image-preview { background: #17171c; border: 1px solid #4d4a56; height: 150px; margin-top: 12px; overflow: hidden; width: 100%; }
+.cms-project-image-preview img { height: 100%; object-fit: cover; width: 100%; }
 
 @media (max-width: 900px) {
   .github-grid { grid-template-columns: repeat(2, 1fr); }

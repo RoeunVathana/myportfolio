@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 
-type PublicProject = { id: string; title: string; tag: string; description: string; accent: string; link: string };
+type PublicProject = { id: string; title: string; tag: string; description: string; accent: string; link: string; imageUrl: string };
 type PublicProfile = { displayName: string; role: string; intro: string; about: string; location: string; availability: string; email: string; avatarUrl: string };
 type PublicSiteInfo = { stack: string; currently: string; location: string; contactEmail: string; github: string; linkedin: string };
 type GitHubRepo = { id: number; name: string; html_url: string; description: string | null; language: string | null; stargazers_count: number; archived?: boolean };
@@ -35,6 +35,7 @@ const fallbackProjects: PublicProject[] = [
     description: "A calm, high-signal finance workspace for teams that want clarity without the spreadsheet sprawl.",
     accent: "project-orbit",
     link: "#",
+    imageUrl: "",
   },
   {
     id: "mori-objects",
@@ -43,6 +44,7 @@ const fallbackProjects: PublicProject[] = [
     description: "A tactile storefront with a tiny carbon footprint, built around thoughtful objects and quiet motion.",
     accent: "project-mori",
     link: "#",
+    imageUrl: "",
   },
   {
     id: "studio-42",
@@ -51,6 +53,7 @@ const fallbackProjects: PublicProject[] = [
     description: "A shared visual playground where a distributed creative team can think, remix, and ship together.",
     accent: "project-studio",
     link: "#",
+    imageUrl: "",
   },
 ];
 
@@ -177,7 +180,11 @@ function HeroScene({ avatarUrl }: { avatarUrl: string }) {
   );
 }
 
-function ProjectVisual({ className }: { className: string }) {
+function ProjectVisual({ className, imageUrl }: { className: string; imageUrl: string }) {
+  if (imageUrl) {
+    return <div className={`project-visual project-image-visual ${className}`} aria-hidden="true"><img src={imageUrl} alt="" /><div className="project-image-shade" /><div className="visual-tag">VIEW / CASE</div></div>;
+  }
+
   return (
     <div className={`project-visual ${className}`} aria-hidden="true">
       <div className="visual-card visual-card-back" />
@@ -275,7 +282,7 @@ export default function Home() {
         <div className="projects-grid">
           {projects.map((project, index) => (
             <article className="project-card" key={project.id}>
-              <ProjectVisual className={project.accent} />
+              <ProjectVisual className={project.accent} imageUrl={project.imageUrl} />
               <div className="project-meta"><span>{String(index + 1).padStart(2, "0")} / {project.tag}</span>{project.link && project.link !== "#" ? <a className="project-visit" href={project.link} target="_blank" rel="noreferrer">LIVE SITE ↗</a> : <span className="project-arrow">↗</span>}</div>
               <h3>{project.title}</h3>
               <p>{project.description}</p>{project.link && project.link !== "#" && <a className="project-site-link" href={project.link} target="_blank" rel="noreferrer">Open deployed site <ArrowIcon /></a>}
