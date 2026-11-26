@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 type PublicProject = { id: string; title: string; tag: string; description: string; accent: string };
 type PublicProfile = { displayName: string; role: string; intro: string; about: string; location: string; availability: string; email: string };
@@ -79,8 +79,39 @@ function BrandMark() {
 }
 
 function HeroScene() {
+  const sceneRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene) return;
+
+    const onPointerMove = (event: PointerEvent) => {
+      const bounds = scene.getBoundingClientRect();
+      const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+      const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+      scene.style.setProperty("--mx", x.toFixed(3));
+      scene.style.setProperty("--my", y.toFixed(3));
+      scene.style.setProperty("--rx", `${(-y * 5).toFixed(2)}deg`);
+      scene.style.setProperty("--ry", `${(x * 7).toFixed(2)}deg`);
+    };
+
+    const resetPointer = () => {
+      scene.style.setProperty("--mx", "0");
+      scene.style.setProperty("--my", "0");
+      scene.style.setProperty("--rx", "0deg");
+      scene.style.setProperty("--ry", "0deg");
+    };
+
+    scene.addEventListener("pointermove", onPointerMove);
+    scene.addEventListener("pointerleave", resetPointer);
+    return () => {
+      scene.removeEventListener("pointermove", onPointerMove);
+      scene.removeEventListener("pointerleave", resetPointer);
+    };
+  }, []);
+
   return (
-    <div className="hero-scene" aria-label="Abstract 3D developer workspace illustration" role="img">
+    <div ref={sceneRef} className="hero-scene" aria-label="Abstract 3D developer workspace illustration" role="img">
       <div className="scene-glow scene-glow-one" />
       <div className="scene-glow scene-glow-two" />
       <div className="orbit-ring orbit-ring-one" />
