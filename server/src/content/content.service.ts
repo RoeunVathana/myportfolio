@@ -8,7 +8,7 @@ import { ProjectUpdateDto, ProfileUpdateDto, SiteInfoUpdateDto } from "./content
 
 const defaultProfile = {
   id: 1,
-  displayName: "Noah",
+  displayName: "Roeun Vathaa",
   role: "FULL-STACK DEVELOPER / 2025",
   intro: "I'm Roeun Vathaa — I design and engineer expressive digital products for people with something worth saying.",
   about: "I like the part where a fuzzy idea becomes something you can touch. My work lives at the intersection of thoughtful product design, playful technology, and the tiny details that make a screen feel human.",
