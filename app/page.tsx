@@ -8,9 +8,9 @@ type PublicSiteInfo = { stack: string; currently: string; location: string; cont
 type GitHubRepo = { id: number; name: string; html_url: string; description: string | null; language: string | null; stargazers_count: number; archived?: boolean };
 
 const fallbackProfile: PublicProfile = {
-  displayName: "Noah",
+  displayName: "Roeun Vathaa",
   role: "FULL-STACK DEVELOPER / 2025",
-  intro: "I'm Noah — I design and engineer expressive digital products for people with something worth saying.",
+  intro: "I'm Roeun Vathaa — I design and engineer expressive digital products for people with something worth saying.",
   about: "I like the part where a fuzzy idea becomes something you can touch. My work lives at the intersection of thoughtful product design, playful technology, and the tiny details that make a screen feel human.",
   location: "Bangkok / GMT+7",
   availability: "Available for select projects",
@@ -76,11 +76,11 @@ function ArrowIcon() {
   );
 }
 
-function BrandMark() {
+function BrandMark({ name }: { name: string }) {
   return (
-    <a className="brand" href="#top" aria-label="Noah home">
+    <a className="brand" href="#top" aria-label={`${name} home`}>
       <span className="brand-orb" />
-      <span>NOAH<span className="brand-dot">.</span></span>
+      <span>{name}<span className="brand-dot">.</span></span>
     </a>
   );
 }
@@ -236,7 +236,7 @@ export default function Home() {
   return (
     <main id="top">
       <nav className="site-nav shell" aria-label="Main navigation">
-        <BrandMark />
+        <BrandMark name={profile.displayName} />
         <div className="nav-links">
           <a href="#work">Work</a>
           <a href="#github">GitHub</a>
@@ -287,7 +287,7 @@ export default function Home() {
       </section>
 
       <section className="about-section shell section-pad" id="about">
-        <div className="about-stamp"><span>NOAH</span><small>EST. 2020</small></div>
+        <div className="about-stamp"><span>{profile.displayName}</span><small>EST. 2020</small></div>
         <div className="about-copy"><p className="eyebrow"><span className="eyebrow-line" /> A LITTLE ABOUT ME</p><h2>Code is my craft.<br /><em>Curiosity is my compass.</em></h2><p className="about-lead">{profile.about}</p><div className="about-details"><div><span>Based in</span><strong>{siteInfo.location}</strong></div><div><span>Currently</span><strong>{siteInfo.currently}</strong></div><div><span>Favorite stack</span><strong>{siteInfo.stack}</strong></div></div><a className="button button-outline" href="#contact">Let&apos;s make something <ArrowIcon /></a></div>
       </section>
 
@@ -296,7 +296,7 @@ export default function Home() {
         <form className="contact-form" onSubmit={handleSubmit}><label><span>Your name</span><input name="name" placeholder="A real human, hopefully" required /></label><label><span>Email address</span><input name="email" type="email" placeholder="you@somewhere.com" required /></label><label><span>What are we making?</span><textarea name="message" placeholder="Tell me the good stuff..." rows={4} required /></label><button className="button button-primary" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending..." : "Send the signal"} <ArrowIcon /></button>{status === "sent" && <p className="form-message success">Signal received. I&apos;ll be in touch soon.</p>}{status === "error" && <p className="form-message error">The API is offline. Email me directly at hello@noah.dev.</p>}</form>
       </section>
 
-      <footer className="site-footer shell"><BrandMark /><span>Designed + built by Noah</span><span>© 2025 / All signal, no noise</span></footer>
+      <footer className="site-footer shell"><BrandMark name={profile.displayName} /><span>Designed + built by {profile.displayName}</span><span>© 2025 / All signal, no noise</span></footer>
     </main>
   );
 }
