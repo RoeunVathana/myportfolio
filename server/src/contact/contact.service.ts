@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ContactDto } from "./contact.dto";
@@ -25,5 +25,19 @@ export class ContactService {
       id: contactMessage.id,
       receivedAt: contactMessage.createdAt.toISOString(),
     };
+  }
+
+  async findAll(dashboardKey?: string) {
+    const configuredKey = process.env.DASHBOARD_KEY;
+    if (!configuredKey || dashboardKey !== configuredKey) {
+      throw new UnauthorizedException("Dashboard access denied");
+    }
+
+    const messages = await this.contactMessages.find({
+      order: { createdAt: "DESC" },
+      take: 100,
+    });
+
+    return { messages };
   }
 }
