@@ -10,7 +10,9 @@ type Message = {
   createdAt: string;
 };
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? (process.env.NODE_ENV === "production"
+  ? "https://noah-portfolio-api.vivaciousdandelion4.chatgpt.site"
+  : "http://localhost:4000");
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en", {

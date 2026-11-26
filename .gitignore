@@ -6,3 +6,4 @@ dist-server/
 !.env.example
 *.log
 *.tsbuildinfo
+remote-api-site/

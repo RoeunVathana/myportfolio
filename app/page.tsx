@@ -26,6 +26,10 @@ const projects = [
   },
 ];
 
+const portfolioApiUrl = process.env.NEXT_PUBLIC_API_URL ?? (process.env.NODE_ENV === "production"
+  ? "https://noah-portfolio-api.vivaciousdandelion4.chatgpt.site"
+  : "http://localhost:4000");
+
 function SparkIcon({ size = 20 }: { size?: number }) {
   return (
     <svg aria-hidden="true" className="spark-icon" width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -131,7 +135,7 @@ export default function Home() {
     const data = Object.fromEntries(new FormData(form).entries());
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"}/api/contact`, {
+      const response = await fetch(`${portfolioApiUrl}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
