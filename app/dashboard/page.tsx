@@ -26,20 +26,29 @@ export default function DashboardPage() {
   const [key, setKey] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [state, setState] = useState<"locked" | "loading" | "ready" | "error">("locked");
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function openInbox(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setState("loading");
+    setErrorMessage("");
 
     try {
       const response = await fetch(`${apiUrl}/api/contact`, {
         headers: { "x-dashboard-key": key },
       });
-      if (!response.ok) throw new Error("Unauthorized");
+      if (response.status === 401) throw new Error("invalid-key");
+      if (!response.ok) throw new Error("api-error");
       const data = (await response.json()) as { messages: Message[] };
       setMessages(data.messages);
       setState("ready");
-    } catch {
+    } catch (error) {
+      const isRemoteLocalApi = typeof window !== "undefined" && window.location.hostname !== "localhost" && apiUrl.includes("localhost");
+      setErrorMessage(error instanceof Error && error.message === "invalid-key"
+        ? "That dashboard key is not valid."
+        : isRemoteLocalApi
+          ? "This remote dashboard still points to localhost. Deploy the NestJS API and set NEXT_PUBLIC_API_URL."
+          : "The NestJS API is offline. Start both services with npm run dev, then try again.");
       setState("error");
     }
   }
@@ -74,7 +83,7 @@ export default function DashboardPage() {
             <form className="dashboard-login" onSubmit={openInbox}>
               <label htmlFor="dashboard-key">Dashboard key</label>
               <div className="dashboard-key-row"><input id="dashboard-key" type="password" value={key} onChange={(event) => setKey(event.target.value)} placeholder="••••••••••••" required /><button className="dashboard-button" type="submit" disabled={state === "loading"}>{state === "loading" ? "Opening..." : "Open inbox ↗"}</button></div>
-              {state === "error" && <p className="dashboard-error">That key did not open the inbox. Check `.env.local` and try again.</p>}
+              {state === "error" && <p className="dashboard-error">{errorMessage}</p>}
             </form>
           </section>
         ) : (
