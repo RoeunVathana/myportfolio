@@ -8,9 +8,9 @@ type PublicSiteInfo = { stack: string; currently: string; location: string; cont
 type GitHubRepo = { id: number; name: string; html_url: string; description: string | null; language: string | null; stargazers_count: number; archived?: boolean };
 
 const fallbackProfile: PublicProfile = {
-  displayName: "Roeun Vathaa",
+  displayName: "Roeun Vathana",
   role: "FULL-STACK DEVELOPER / 2025",
-  intro: "I'm Roeun Vathaa — I design and engineer expressive digital products for people with something worth saying.",
+  intro: "I'm Roeun Vathana — I design and engineer expressive digital products for people with something worth saying.",
   about: "I like the part where a fuzzy idea becomes something you can touch. My work lives at the intersection of thoughtful product design, playful technology, and the tiny details that make a screen feel human.",
   location: "Bangkok / GMT+7",
   availability: "Available for select projects",

@@ -195,7 +195,7 @@ export default function DashboardPage() {
   if (state !== "ready" || !content) {
     return (
       <main className="dashboard-page">
-        <nav className="dashboard-nav dashboard-shell" aria-label="Dashboard navigation"><a className="dashboard-brand" href="/">ROEUN VATHAA<span>.</span><small>/ CONTENT STUDIO</small></a><a className="dashboard-back" href="/">Back to portfolio <span>↗</span></a></nav>
+        <nav className="dashboard-nav dashboard-shell" aria-label="Dashboard navigation"><a className="dashboard-brand" href="/">ROEUN VATHANA<span>.</span><small>/ CONTENT STUDIO</small></a><a className="dashboard-back" href="/">Back to portfolio <span>↗</span></a></nav>
         <div className="dashboard-shell">
           <section className="dashboard-hero"><p className="dashboard-kicker"><span /> PRIVATE CONTENT STUDIO / 01</p><h1>Make the site<br /><em>feel like you.</em></h1><p>Edit the profile, projects, and information that power your public portfolio.</p></section>
           <section className="dashboard-lock-card"><div className="lock-orb"><span>↗</span></div><div><p className="dashboard-kicker"><span /> OWNER ACCESS</p><h2>Open the editor.</h2><p>Use your dashboard key to manage the portfolio content stored in PostgreSQL.</p></div><form className="dashboard-login" onSubmit={openEditor}><label htmlFor="dashboard-key">Dashboard key</label><div className="dashboard-key-row"><input id="dashboard-key" type="password" value={key} onChange={(event) => setKey(event.target.value)} placeholder="••••••••••••" required /><button className="dashboard-button" type="submit" disabled={state === "loading"}>{state === "loading" ? "Opening..." : "Open editor ↗"}</button></div>{state === "error" && <p className="dashboard-error">{errorMessage}</p>}</form></section>
@@ -210,7 +210,7 @@ export default function DashboardPage() {
 
   return (
     <main className="dashboard-page">
-      <nav className="dashboard-nav dashboard-shell" aria-label="Dashboard navigation"><a className="dashboard-brand" href="/">ROEUN VATHAA<span>.</span><small>/ CONTENT STUDIO</small></a><div className="cms-nav-actions"><span className="cms-live-dot" /> Saved locally + remotely <a className="dashboard-back" href="/">View portfolio <span>↗</span></a></div></nav>
+      <nav className="dashboard-nav dashboard-shell" aria-label="Dashboard navigation"><a className="dashboard-brand" href="/">ROEUN VATHANA<span>.</span><small>/ CONTENT STUDIO</small></a><div className="cms-nav-actions"><span className="cms-live-dot" /> Saved locally + remotely <a className="dashboard-back" href="/">View portfolio <span>↗</span></a></div></nav>
       <div className="dashboard-shell cms-shell">
         <header className="cms-heading"><div><p className="dashboard-kicker"><span className="green-dot" /> PRIVATE CONTENT STUDIO</p><h1>Make it<br /><em>yours.</em></h1></div><p>Edit your public story, shape the work, and keep the portfolio feeling current.</p></header>
         <div className="cms-layout">
@@ -229,7 +229,7 @@ export default function DashboardPage() {
           </section>
         </div>
       </div>
-      <footer className="dashboard-footer dashboard-shell"><span>ROEUN VATHAA / CONTENT STUDIO</span><span>Next.js + NestJS + PostgreSQL</span></footer>
+      <footer className="dashboard-footer dashboard-shell"><span>ROEUN VATHANA / CONTENT STUDIO</span><span>Next.js + NestJS + PostgreSQL</span></footer>
     </main>
   );
 }

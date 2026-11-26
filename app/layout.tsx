@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Roeun Vathaa — Full-stack developer",
+  title: "Roeun Vathana — Full-stack developer",
   description: "Portfolio of Noah, a full-stack developer crafting digital products with Next.js and NestJS.",
 };
 
